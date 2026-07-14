@@ -1,4 +1,4 @@
-# WordCatcher / 拍沃德
+# WordCatcher / 词光里
 
 WordCatcher is a Flutter MVP for photo-based object recognition and
 multilingual vocabulary learning.

@@ -6,10 +6,10 @@ class AppShadows {
   static const List<BoxShadow> none = [];
 
   static const List<BoxShadow> card = [
-    BoxShadow(color: Color(0x140F172A), blurRadius: 18, offset: Offset(0, 8)),
+    BoxShadow(color: Color(0x1A67CFC2), blurRadius: 22, offset: Offset(0, 9)),
   ];
 
   static const List<BoxShadow> floating = [
-    BoxShadow(color: Color(0x1F0F172A), blurRadius: 24, offset: Offset(0, 12)),
+    BoxShadow(color: Color(0x247C8BEF), blurRadius: 30, offset: Offset(0, 14)),
   ];
 }

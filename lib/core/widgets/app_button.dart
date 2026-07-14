@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-enum AppButtonVariant { primary, tonal, outline, text }
+import '../theme/theme.dart';
+
+enum AppButtonVariant { primary, tonal, successTonal, outline, text }
 
 class AppButton extends StatelessWidget {
   const AppButton({
@@ -33,6 +35,16 @@ class AppButton extends StatelessWidget {
     this.tooltip,
     super.key,
   }) : variant = AppButtonVariant.tonal;
+
+  const AppButton.successTonal({
+    required this.label,
+    required this.onPressed,
+    this.icon,
+    this.isLoading = false,
+    this.expand = false,
+    this.tooltip,
+    super.key,
+  }) : variant = AppButtonVariant.successTonal;
 
   const AppButton.outline({
     required this.label,
@@ -106,6 +118,19 @@ class AppButton extends StatelessWidget {
                 icon: leading,
                 label: labelWidget,
               ),
+      AppButtonVariant.successTonal =>
+        leading == null
+            ? FilledButton.tonal(
+                onPressed: effectiveOnPressed,
+                style: _successTonalStyle(),
+                child: labelWidget,
+              )
+            : FilledButton.tonalIcon(
+                onPressed: effectiveOnPressed,
+                style: _successTonalStyle(),
+                icon: leading,
+                label: labelWidget,
+              ),
       AppButtonVariant.outline =>
         leading == null
             ? OutlinedButton(onPressed: effectiveOnPressed, child: labelWidget)
@@ -138,12 +163,22 @@ class AppButton extends StatelessWidget {
     final color = switch (variant) {
       AppButtonVariant.primary => colorScheme.onPrimary,
       AppButtonVariant.tonal => colorScheme.onSecondaryContainer,
+      AppButtonVariant.successTonal => AppColors.success,
       AppButtonVariant.outline || AppButtonVariant.text => colorScheme.primary,
     };
 
     return SizedBox.square(
       dimension: 18,
       child: CircularProgressIndicator(strokeWidth: 2, color: color),
+    );
+  }
+
+  ButtonStyle _successTonalStyle() {
+    return FilledButton.styleFrom(
+      backgroundColor: AppColors.successContainer,
+      foregroundColor: AppColors.success,
+      disabledBackgroundColor: AppColors.successContainer,
+      disabledForegroundColor: AppColors.success,
     );
   }
 }

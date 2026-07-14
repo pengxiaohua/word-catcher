@@ -1,8 +1,13 @@
+import '../../settings/domain/example_sentence_difficulty.dart';
+import 'word_category.dart';
+
 class AnalyzeResult {
   const AnalyzeResult({
     required this.id,
     required this.imageUrl,
     required this.sourceWord,
+    required this.wordCategory,
+    required this.sentenceDifficulty,
     required this.phonetics,
     required this.translations,
     required this.sentences,
@@ -13,6 +18,8 @@ class AnalyzeResult {
   final String id;
   final String imageUrl;
   final String sourceWord;
+  final WordCategory wordCategory;
+  final ExampleSentenceDifficulty sentenceDifficulty;
   final Phonetics phonetics;
   final Map<String, String> translations;
   final List<LearningSentence> sentences;
@@ -24,6 +31,10 @@ class AnalyzeResult {
       id: _stringValue(json['id'] ?? json['scanHistoryId']),
       imageUrl: _stringValue(json['imageUrl']),
       sourceWord: _stringValue(json['sourceWord'] ?? json['word']),
+      wordCategory: WordCategory.fromId(_stringValue(json['wordCategory'])),
+      sentenceDifficulty: ExampleSentenceDifficulty.fromId(
+        _stringValue(json['sentenceDifficulty']),
+      ),
       phonetics: Phonetics.fromJson(_asMap(json['phonetics'])),
       translations: _stringMap(json['translations']),
       sentences: _sentences(json['sentences']),

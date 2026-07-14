@@ -40,7 +40,7 @@ class ResultCardWidget extends ConsumerWidget {
           onPlay: (url) => _play(context, ref, url, label: '单词音频'),
         ),
         const SizedBox(height: AppSpacing.lg),
-        _PracticeIntro(onStartPractice: () => _showPracticeTip(context)),
+        const _PracticeIntro(),
         const SizedBox(height: AppSpacing.sm),
         for (var index = 0; index < result.sentences.length; index++) ...[
           _SentencePracticeCard(
@@ -83,12 +83,6 @@ class ResultCardWidget extends ConsumerWidget {
         context,
       ).showSnackBar(SnackBar(content: Text('$label暂不可用：$error')));
     }
-  }
-
-  void _showPracticeTip(BuildContext context) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('从任一句例句开始，读完后会看到跟读评分。')));
   }
 }
 
@@ -195,6 +189,21 @@ class _WordPanel extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
         ),
+        const SizedBox(height: AppSpacing.sm),
+        Wrap(
+          spacing: AppSpacing.xs,
+          runSpacing: AppSpacing.xxs,
+          children: [
+            _ResultMetaChip(
+              icon: Icons.category_rounded,
+              label: result.wordCategory.label,
+            ),
+            _ResultMetaChip(
+              icon: Icons.auto_stories_rounded,
+              label: result.sentenceDifficulty.label,
+            ),
+          ],
+        ),
         const SizedBox(height: AppSpacing.lg),
         Wrap(
           spacing: AppSpacing.sm,
@@ -213,6 +222,42 @@ class _WordPanel extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+}
+
+class _ResultMetaChip extends StatelessWidget {
+  const _ResultMetaChip({required this.icon, required this.label});
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        color: AppColors.macaronButterSoft,
+        borderRadius: AppRadius.pill,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.xs,
+          vertical: AppSpacing.xxs,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 13, color: AppColors.mutedInk),
+            const SizedBox(width: AppSpacing.xxs),
+            Text(
+              label,
+              style: Theme.of(
+                context,
+              ).textTheme.labelMedium?.copyWith(color: AppColors.photoInk),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -295,34 +340,20 @@ class _ImageFallback extends StatelessWidget {
 }
 
 class _PracticeIntro extends StatelessWidget {
-  const _PracticeIntro({required this.onStartPractice});
-
-  final VoidCallback onStartPractice;
+  const _PracticeIntro();
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('跟读练习', style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: AppSpacing.xxs),
-              Text(
-                '选一句听一遍，再读出来。系统会给你一个鼓励式评分。',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ],
+        Text('跟读练习', style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: AppSpacing.xxs),
+        Text(
+          '选一句听一遍，再读出来。系统会给你一个鼓励式评分。',
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
-        ),
-        const SizedBox(width: AppSpacing.sm),
-        AppButton.tonal(
-          label: '开始',
-          icon: Icons.mic_none_rounded,
-          onPressed: onStartPractice,
         ),
       ],
     );
@@ -410,14 +441,14 @@ class _SentencePracticeCardState extends ConsumerState<_SentencePracticeCard> {
             children: [
               Expanded(
                 child: AppButton.tonal(
-                  label: '听句子',
+                  label: '播放',
                   icon: Icons.volume_up_rounded,
                   onPressed: _isScoring ? null : _playSentence,
                 ),
               ),
               const SizedBox(width: AppSpacing.sm),
               Expanded(
-                child: AppButton.outline(
+                child: AppButton.successTonal(
                   label: _practiceButtonLabel,
                   icon: _practiceButtonIcon,
                   isLoading: _isScoring,
@@ -435,7 +466,7 @@ class _SentencePracticeCardState extends ConsumerState<_SentencePracticeCard> {
     return switch (_status) {
       _PracticeStatus.recording => '结束录音',
       _PracticeStatus.scoring => '评分中',
-      _PracticeStatus.idle || _PracticeStatus.scored => '读一遍',
+      _PracticeStatus.idle || _PracticeStatus.scored => '跟读',
     };
   }
 
@@ -681,7 +712,7 @@ class _ResultActions extends StatelessWidget {
             children: [
               Expanded(
                 child: AppButton.tonal(
-                  label: '存入生词本',
+                  label: '存到学习',
                   icon: Icons.bookmark_add_outlined,
                   onPressed: onSaveToWordbook,
                 ),

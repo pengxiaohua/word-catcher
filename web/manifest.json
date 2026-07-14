@@ -1,11 +1,11 @@
 {
-    "name": "word_catcher",
-    "short_name": "word_catcher",
+    "name": "词光里",
+    "short_name": "词光里",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#FFF8FC",
+    "theme_color": "#137C76",
+    "description": "词光里，拍照识物学习英语单词。",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'audio_play_button.dart';
+import '../theme/theme.dart';
 
 enum PronunciationAccent {
-  uk('UK', '播放英音'),
-  us('US', '播放美音');
+  uk('英', '播放英音'),
+  us('美', '播放美音');
 
   const PronunciationAccent(this.label, this.tooltip);
 
@@ -32,12 +32,38 @@ class PronunciationButton extends StatelessWidget {
     final label = cleanPhonetic == null || cleanPhonetic.isEmpty
         ? accent.label
         : '${accent.label} $cleanPhonetic';
+    final colorScheme = Theme.of(context).colorScheme;
+    final labelWidget = Text(
+      label,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
+    final icon = isLoading
+        ? SizedBox.square(
+            dimension: 16,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              color: colorScheme.onSecondaryContainer,
+            ),
+          )
+        : const Icon(Icons.volume_up_rounded, size: 18);
 
-    return AudioPlayButton(
-      label: label,
-      tooltip: accent.tooltip,
-      onPressed: onPressed,
-      isLoading: isLoading,
+    return Tooltip(
+      message: accent.tooltip,
+      child: FilledButton.tonalIcon(
+        onPressed: isLoading ? null : onPressed,
+        icon: icon,
+        label: labelWidget,
+        style: FilledButton.styleFrom(
+          minimumSize: const Size(48, 40),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.sm,
+            vertical: AppSpacing.xs,
+          ),
+          tapTargetSize: MaterialTapTargetSize.padded,
+          textStyle: Theme.of(context).textTheme.labelMedium,
+        ),
+      ),
     );
   }
 }

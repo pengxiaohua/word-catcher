@@ -30,7 +30,7 @@ class ShareCardWatermark extends StatelessWidget {
         ),
         const SizedBox(width: AppSpacing.xxs),
         Text(
-          '拍沃德 / WordCatcher',
+          '词光里 / WordCatcher',
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(

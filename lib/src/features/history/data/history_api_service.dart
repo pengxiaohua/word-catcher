@@ -54,6 +54,16 @@ class HistoryApiService {
         'id': 'history-1',
         'imageUrl': 'https://picsum.photos/seed/camera/240/240',
         'sourceWord': 'camera',
+        'wordCategory': 'DIGITAL_DEVICES',
+        'sentenceDifficulty': 'A1',
+        'phonetics': {'uk': '/ˈkæmərə/', 'us': '/ˈkæmərə/'},
+        'translations': {'中文': '相机'},
+        'sentences': [
+          {
+            'english': 'I use a camera to capture quiet moments.',
+            'translation': '我用相机记录安静的时刻。',
+          },
+        ],
         'audioLinks': {
           'uk': 'https://oss.mock.wordcatcher.app/tts/uk/camera.mp3',
           'us': 'https://oss.mock.wordcatcher.app/tts/us/camera.mp3',
@@ -64,6 +74,16 @@ class HistoryApiService {
         'id': 'history-2',
         'imageUrl': 'https://picsum.photos/seed/notebook/240/240',
         'sourceWord': 'notebook',
+        'wordCategory': 'SCHOOL_OFFICE',
+        'sentenceDifficulty': 'A2',
+        'phonetics': {'uk': '/ˈnəʊtbʊk/', 'us': '/ˈnoʊtbʊk/'},
+        'translations': {'中文': '笔记本'},
+        'sentences': [
+          {
+            'english': 'This notebook keeps my tiny word discoveries.',
+            'translation': '这个笔记本收藏我的小小单词发现。',
+          },
+        ],
         'audioLinks': {
           'uk': 'https://oss.mock.wordcatcher.app/tts/uk/notebook.mp3',
           'us': 'https://oss.mock.wordcatcher.app/tts/us/notebook.mp3',
@@ -74,6 +94,16 @@ class HistoryApiService {
         'id': 'history-3',
         'imageUrl': 'https://picsum.photos/seed/bottle/240/240',
         'sourceWord': 'bottle',
+        'wordCategory': 'HOME_LIVING',
+        'sentenceDifficulty': 'B1',
+        'phonetics': {'uk': '/ˈbɒtl/', 'us': '/ˈbɑːtl/'},
+        'translations': {'中文': '瓶子'},
+        'sentences': [
+          {
+            'english': 'A small bottle sits beside the book.',
+            'translation': '一个小瓶子放在书旁边。',
+          },
+        ],
         'audioLinks': {
           'uk': 'https://oss.mock.wordcatcher.app/tts/uk/bottle.mp3',
           'us': 'https://oss.mock.wordcatcher.app/tts/us/bottle.mp3',

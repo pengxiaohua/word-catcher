@@ -47,9 +47,9 @@ class ShareCardExportService {
 
     await SharePlus.instance.share(
       ShareParams(
-        title: '拍沃德单词卡',
-        subject: '拍沃德单词卡：$word',
-        text: '我用拍沃德捕捉到一个单词：$word',
+        title: '词光里单词卡',
+        subject: '词光里单词卡：$word',
+        text: '我用词光里捕捉到一个单词：$word',
         files: [
           XFile(
             file.path,

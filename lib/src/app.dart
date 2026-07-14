@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:word_catcher/core/theme/theme.dart';
 
-import 'features/scan/presentation/home_screen.dart';
+import 'features/shell/presentation/app_shell.dart';
 
 class WordCatcherApp extends StatelessWidget {
   const WordCatcherApp({super.key});
@@ -9,10 +9,10 @@ class WordCatcherApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '拍沃德',
+      title: '词光里',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(),
-      home: const HomeScreen(),
+      home: const AppShell(),
     );
   }
 }

@@ -17,6 +17,7 @@ class ScanNotifier extends Notifier<ScanState> {
     required ImageSource source,
     required String targetLanguage,
     required String sentenceVoiceId,
+    required String sentenceDifficulty,
   }) async {
     try {
       state = const ScanState(status: ScanStatus.picking);
@@ -44,6 +45,7 @@ class ScanNotifier extends Notifier<ScanState> {
             image: preparedImage,
             targetLanguage: targetLanguage,
             sentenceVoiceId: sentenceVoiceId,
+            sentenceDifficulty: sentenceDifficulty,
           );
 
       state = ScanState(

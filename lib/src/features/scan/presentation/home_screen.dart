@@ -7,9 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:word_catcher/core/theme/theme.dart';
 import 'package:word_catcher/core/widgets/widgets.dart';
 
-import '../../history/presentation/history_screen.dart';
 import '../../settings/data/voice_settings_notifier.dart';
-import '../../settings/presentation/voice_settings_page.dart';
 import '../../share_card/models/share_card_data.dart';
 import '../../share_card/pages/share_card_editor_page.dart';
 import '../domain/analyze_result.dart';
@@ -33,44 +31,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('拍沃德 WordCatcher'),
-        actions: [
-          IconButton(
-            tooltip: '发音设置',
-            icon: const Icon(Icons.tune_rounded),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (_) => const VoiceSettingsPage(),
-                ),
-              );
-            },
-          ),
-          IconButton(
-            tooltip: '历史生词本',
-            icon: const Icon(Icons.history_rounded),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute<void>(builder: (_) => const HistoryScreen()),
-              );
-            },
-          ),
-        ],
-      ),
       body: SafeArea(
         child: ListView(
           padding: AppSpacing.screen,
           children: [
+            const _HomeGreeting(),
+            const SizedBox(height: AppSpacing.xl),
             Text(
               '拍照识物，学会英语',
               style: Theme.of(
                 context,
-              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900),
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              '选择照片后会识别英文单词，并生成中文释义、例句和英美发音。',
+              '把身边的小物拍下来，收集今天闪闪发光的新单词。',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurfaceVariant,
               ),
@@ -80,6 +55,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               isLoading: state.isLoading,
               sentenceVoiceLabel:
                   voiceSettings.value?.sentenceVoice.label ?? '女声-美式',
+              sentenceDifficultyLabel:
+                  voiceSettings.value?.sentenceDifficulty.label ?? 'A1-小学',
               onCamera: () => _analyze(ImageSource.camera),
               onGallery: () => _analyze(ImageSource.gallery),
             ),
@@ -132,6 +109,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           source: source,
           targetLanguage: _meaningLanguage,
           sentenceVoiceId: voiceSettings.sentenceVoice.id,
+          sentenceDifficulty: voiceSettings.sentenceDifficulty.id,
         );
   }
 
@@ -152,7 +130,55 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void _saveToWordbook() {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('已放进生词本，稍后可以在历史里复习。')));
+    ).showSnackBar(const SnackBar(content: Text('已放进学习页，稍后可以继续复习和分享。')));
+  }
+}
+
+class _HomeGreeting extends StatelessWidget {
+  const _HomeGreeting();
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      backgroundColor: AppColors.macaronPinkSoft,
+      borderColor: AppColors.macaronPinkSoft,
+      child: Row(
+        children: [
+          DecoratedBox(
+            decoration: const BoxDecoration(
+              color: AppColors.paper,
+              borderRadius: AppRadius.large,
+            ),
+            child: Padding(
+              padding: AppSpacing.compactCard,
+              child: Icon(
+                Icons.wb_sunny_rounded,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+            ),
+          ),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '今天也去捕捉词光吧',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: AppSpacing.xxs),
+                Text(
+                  '照片、发音、例句和跟读练习，会一起变成你的学习卡。',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(color: AppColors.mutedInk),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -160,20 +186,22 @@ class _CapturePanel extends StatelessWidget {
   const _CapturePanel({
     required this.isLoading,
     required this.sentenceVoiceLabel,
+    required this.sentenceDifficultyLabel,
     required this.onCamera,
     required this.onGallery,
   });
 
   final bool isLoading;
   final String sentenceVoiceLabel;
+  final String sentenceDifficultyLabel;
   final VoidCallback onCamera;
   final VoidCallback onGallery;
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return AppCard(
+      backgroundColor: AppColors.macaronMintSoft,
+      borderColor: AppColors.macaronMintSoft,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -181,15 +209,15 @@ class _CapturePanel extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               DecoratedBox(
-                decoration: BoxDecoration(
-                  color: colorScheme.primaryContainer,
-                  borderRadius: AppRadius.medium,
+                decoration: const BoxDecoration(
+                  color: AppColors.paper,
+                  borderRadius: AppRadius.large,
                 ),
                 child: Padding(
                   padding: AppSpacing.compactCard,
                   child: Icon(
                     Icons.camera_alt_outlined,
-                    color: colorScheme.onPrimaryContainer,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
               ),
@@ -204,9 +232,9 @@ class _CapturePanel extends StatelessWidget {
                     ),
                     const SizedBox(height: AppSpacing.xxs),
                     Text(
-                      '拍一张照片，生成单词、音标、例句和可分享的学习卡。例句：$sentenceVoiceLabel。',
+                      '拍一张照片，生成单词、音标、例句和可分享的学习卡。例句：$sentenceDifficultyLabel · $sentenceVoiceLabel。',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
+                        color: AppColors.mutedInk,
                       ),
                     ),
                   ],

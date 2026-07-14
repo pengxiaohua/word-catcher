@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>拍沃德</string>
+	<string>词光里</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>拍沃德</string>
+	<string>词光里</string>
 	<key>NSCameraUsageDescription</key>
 	<string>用于拍摄物体照片并识别英文单词。</string>
 	<key>NSLocalNetworkUsageDescription</key>
