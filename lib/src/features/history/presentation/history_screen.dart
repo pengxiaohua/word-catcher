@@ -31,6 +31,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
 
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: history.when(
           loading: () => const Center(
             child: Padding(
@@ -49,9 +50,9 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
           data: (items) {
             final filteredItems = _filteredItems(items);
             return RefreshIndicator(
-              onRefresh: () async => ref.invalidate(historyProvider),
+              onRefresh: _reloadHistory,
               child: ListView(
-                padding: AppSpacing.screen,
+                padding: AppBottomNavigationLayout.pageScrollPadding(context),
                 children: [
                   Text(
                     '照片词汇历史',
@@ -122,6 +123,11 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
         _olderSelectedDate = null;
       }
     });
+  }
+
+  Future<void> _reloadHistory() async {
+    ref.invalidate(historyProvider);
+    await ref.read(historyProvider.future);
   }
 
   Future<void> _openOlderCalendar(List<ScanHistoryItem> items) async {

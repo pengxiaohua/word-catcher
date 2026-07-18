@@ -1,18 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/services.dart';
 import 'package:word_catcher/core/theme/theme.dart';
 
+import '../../history/data/history_api_service.dart';
 import '../../history/presentation/history_screen.dart';
 import '../../scan/presentation/home_screen.dart';
 import '../../settings/presentation/my_screen.dart';
 
-class AppShell extends StatefulWidget {
+class AppShell extends ConsumerStatefulWidget {
   const AppShell({super.key});
 
   @override
-  State<AppShell> createState() => _AppShellState();
+  ConsumerState<AppShell> createState() => _AppShellState();
 }
 
-class _AppShellState extends State<AppShell> {
+class _AppShellState extends ConsumerState<AppShell> {
+  static const _historyTabIndex = 1;
+  static const _systemUiOverlayStyle = SystemUiOverlayStyle(
+    systemNavigationBarColor: Colors.transparent,
+    systemNavigationBarDividerColor: Colors.transparent,
+    systemNavigationBarIconBrightness: Brightness.dark,
+    systemNavigationBarContrastEnforced: false,
+  );
+
   int _selectedIndex = 0;
 
   static const _pages = <Widget>[HomeScreen(), HistoryScreen(), MyScreen()];
@@ -36,41 +47,46 @@ class _AppShellState extends State<AppShell> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBody: true,
-      body: IndexedStack(index: _selectedIndex, children: _pages),
-      bottomNavigationBar: Builder(
-        builder: (context) {
-          final bottomInset = MediaQuery.of(context).padding.bottom;
-          final bottomPadding = bottomInset == 0
-              ? AppSpacing.xs
-              : bottomInset + AppSpacing.xxs;
-
-          return Padding(
-            padding: EdgeInsets.fromLTRB(
-              AppSpacing.md,
-              0,
-              AppSpacing.md,
-              bottomPadding,
-            ),
-            child: DecoratedBox(
-              decoration: const BoxDecoration(
-                color: AppColors.paper,
-                borderRadius: AppRadius.large,
-                boxShadow: AppShadows.card,
-              ),
-              child: _ShellNavigationBar(
-                selectedIndex: _selectedIndex,
-                destinations: _destinations,
-                onSelected: (index) {
-                  setState(() => _selectedIndex = index);
-                },
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: _systemUiOverlayStyle,
+      child: Scaffold(
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            IndexedStack(index: _selectedIndex, children: _pages),
+            Positioned(
+              left: AppSpacing.md,
+              right: AppSpacing.md,
+              bottom: AppBottomNavigationLayout.bottomOffset(context),
+              child: DecoratedBox(
+                decoration: const BoxDecoration(
+                  color: AppColors.paper,
+                  borderRadius: AppRadius.large,
+                  boxShadow: AppShadows.card,
+                ),
+                child: _ShellNavigationBar(
+                  selectedIndex: _selectedIndex,
+                  destinations: _destinations,
+                  onSelected: _selectDestination,
+                ),
               ),
             ),
-          );
-        },
+          ],
+        ),
       ),
     );
+  }
+
+  void _selectDestination(int index) {
+    if (index == _historyTabIndex) {
+      ref.invalidate(historyProvider);
+    }
+
+    if (index == _selectedIndex) {
+      return;
+    }
+
+    setState(() => _selectedIndex = index);
   }
 }
 
@@ -88,7 +104,7 @@ class _ShellNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 60,
+      height: AppBottomNavigationLayout.height,
       child: Material(
         color: Colors.transparent,
         borderRadius: AppRadius.large,
@@ -136,12 +152,15 @@ class _ShellTabButton extends StatelessWidget {
       label: destination.label,
       child: InkWell(
         onTap: onTap,
+        splashFactory: NoSplash.splashFactory,
+        overlayColor: WidgetStateProperty.all(Colors.transparent),
         borderRadius: AppRadius.large,
         child: Align(
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 180),
             curve: Curves.easeOutCubic,
-            constraints: const BoxConstraints(minWidth: 76, minHeight: 48),
+            width: double.infinity,
+            constraints: const BoxConstraints(minHeight: 48),
             padding: const EdgeInsets.symmetric(
               horizontal: AppSpacing.sm,
               vertical: AppSpacing.xxs,

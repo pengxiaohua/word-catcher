@@ -21,8 +21,9 @@ class MyScreen extends ConsumerWidget {
 
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: ListView(
-          padding: AppSpacing.screen,
+          padding: AppBottomNavigationLayout.pageScrollPadding(context),
           children: [
             const _ProfileCard(),
             const SizedBox(height: AppSpacing.xl),
